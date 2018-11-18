@@ -8,6 +8,43 @@ subroutine show_matrix(B,m,k)
     write(*,*) 
 end subroutine show_matrix
 
+subroutine choldc(a,n,np,p)
+implicit none
+integer n,np
+real*16 a(np,np),p(n)
+
+integer i,j,k
+real*16 summ
+
+do i=1,n
+  do j=i,n
+    summ=a(i,j)
+    do k=i-1,1,-1
+      summ = summ -a(i,k)*a(j,k)
+    enddo
+    
+    if(i==j) then
+      if(summ <= 0) write(*,*) 'A is not symmetric positive defined'
+      p(i) = sqrt(summ)
+      else
+        a(j,i)=summ/p(i)
+      endif
+    enddo
+  enddo
+do i=1,n
+  do j=1,n
+    if(i<j) then
+      a(i,j) = 0
+    endif  
+    if(i ==j) then
+      a(i,j) = p(i)
+    endif
+    enddo
+enddo 
+
+return 
+endsubroutine choldc  
+
 program cgradient
       implicit none
       integer i, it,n
@@ -58,15 +95,14 @@ program cgradient
 
         !write(*,*) lambda
         
-       ! write (*,*) 'solution'
-        !call show_matrix(v,n,1)
+        write (*,*) 'solution'
+       !call show_matrix(v,n,1)
         
         !write (*,*) 'error' 
         !write (*,'(20G12.4)') error
         
          do i=2,it
            v0 = v
-           !necessita de um ponteiro para a variável r
            pt1=r0
            r0 = r
            r = pt1
