@@ -8,14 +8,14 @@ subroutine show_matrix(B,m,k)
     write(*,*) 
 end subroutine show_matrix
 
-subroutine choldc(a,n,np,p)
+subroutine choldc(a,n,np)
 implicit none
 integer n,np
-real*16 a(np,np),p(n)
-
+real*16 a(np,np)
+real*16,allocatable :: p(:)
+allocate(p(1:n))
 integer i,j,k
 real*16 summ
-
 do i=1,n
   do j=i,n
     summ=a(i,j)
